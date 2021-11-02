@@ -6,17 +6,11 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 01:20:28 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/01 22:50:54 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/02 23:38:52 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <sys/fcntl.h>
-#include <sys/errno.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include "get_next_line/get_next_line.h"
-#include "libft/libft.h"
+#include "includes/so_long.h"
 
 void	error_n_exit(char *err_msg)
 {
@@ -75,13 +69,13 @@ void	print_map(char **map)
 	}
 }
 
-int	check_unique(int i, int j, int *count_P, int *count_E)
+/*int	check_unique(int i, int j, int *count_P, int *count_E)
 {
 	if (map[i][j] == 'P')
 		count_P++;
 	if (map[i][j] == 'E')
 		count_E++;
-}
+}*/
 
 int	invalid_map_char(int i, int j, char **map)
 {
@@ -118,7 +112,7 @@ void	map_valid(char **map)
 		i++;
 	}
 	if (count_P > 1 || count_E > 1)
-		error_n_exit();
+		error_n_exit("To much exit or player");
 }
 
 char	**map_parsing(int argc, char **argv, char **map)
@@ -152,11 +146,19 @@ char	**map_parsing(int argc, char **argv, char **map)
 int	main(int argc, char **argv)
 {
 	char	**map;
+	void	*mlx;
+	void	*img;
+	void	*mlx_win;
 
 	errno = 0;
 	map = NULL;
 	map = map_parsing(argc, argv, map);
 	print_map(map);
+	mlx = mlx_init();
+	mlx_win = mlx_new_window(mlx, 1200, 600, "Hello world!");
+	img = mlx_new_image(mlx, 500, 500);
+	//mlx_xpm_file_to_image(mlx, "box.XPM", 50, 50);
+	mlx_loop(mlx);
 	leak_case(5, map); //todo нужно помнить кол-во строк
 	return (0);
 }
