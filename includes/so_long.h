@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/02 19:07:15 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/03 20:57:00 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,13 @@
 # include "mlx.h"
 
 typedef struct s_map{
-	int		count_P;
-	int		count_E;
-}				t_map_check;
+	char	**map;
+	int		height;
+	int		width;
+}				t_map;
+
+void	error_n_exit(char *err_msg);
+void	**map_parsing(int argc, char **argv, t_map *map_config);
+void	print_map(char **map);
 
 #endif
