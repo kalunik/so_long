@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/03 20:57:00 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/04 14:19:33 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,15 @@
 
 typedef struct s_map{
 	char	**map;
+	int		count_C;
+	int		count_E;
+	int		count_P;
 	int		height;
 	int		width;
 }				t_map;
 
 void	error_n_exit(char *err_msg);
-void	**map_parsing(int argc, char **argv, t_map *map_config);
+void	*map_parsing(int argc, char **argv, t_map *map_config);
 void	print_map(char **map);
 
 #endif

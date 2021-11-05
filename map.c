@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 20:54:10 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/03 20:59:14 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/05 11:53:48 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,24 +37,29 @@ void	argv_valid(int argc, char **argv)
 
 int	count_map_lines(char *path_to_map)
 {
-	int		i;
 	int		fd;
 	int		lines_count;
 	char	*buf;
 
-	i = 1;
 	lines_count = 0;
 	fd = open(path_to_map, O_RDONLY);
 	if (fd == -1)
 		error_n_exit("Can't read a buf");
-	while (i > 0)
+	while (get_next_line(fd, &buf))
 	{
-		i = get_next_line(fd, &buf);
-		lines_count += i;
-		//printf("i = %d %s\n", i, buf);
+		lines_count++;
 		free(buf);
 	}
 	return (lines_count);
+}
+void	null_to_map_config(t_map *map_config)
+{
+	map_config->map = NULL;
+	map_config->count_C = 0;
+	map_config->count_E = 0;
+	map_config->count_P = 0;
+	map_config->height = 0;
+	map_config->width = 0;
 }
 
 void	print_map(char **map)
@@ -69,11 +74,24 @@ void	print_map(char **map)
 	}
 }
 
-int	invalid_map_char(int i, int j, char **map)
+int	map_chars_scan(int i, int j, t_map *map_config)
 {
+	char	**map;
+
+	map = map_config->map;
 	if (map[i][j] != '0' && map[i][j] != '1' && map[i][j] != 'C' &&
 		map[i][j] != 'E' && map[i][j] != 'P')
 		return (-1);
+	if (map_config->map[i][j] == 'C')
+		map_config->count_C++;
+	if (map_config->map[i][j] == 'E')
+		map_config->count_E++;
+	if (map_config->map[i][j] == 'P')
+		map_config->count_P++;
+	if ((i == 0 || i == map_config->height) && map[i][j] != '1')
+		error_n_exit("Map's top or bottom doesn't surrounded by the walls");
+	if (i != 0 && (map[i][0] != '1' || map[i][map_config->width] != '1'))
+		error_n_exit("Map's L or R sides doesn't surrounded by the walls");
 	return (0);
 }
 
@@ -81,53 +99,49 @@ void	map_valid(t_map *map_config)
 {
 	int		i;
 	int		j;
-	int		count_P;
-	int		count_E;
 
 	i = 0;
 	j = 0;
-	count_P = 0;
-	count_E = 0;
 	while (map_config->map[i])
 	{
 		while (map_config->map[i][j])
 		{
-			if (invalid_map_char(i, j, map_config->map))
+			if (map_chars_scan(i, j, map_config))
 				error_n_exit("Invalid markup symbols on the map");
-			if (map_config->map[i][j] == 'P')
-				count_P++;
 			j++;
 		}
+		j--;
+		if (map_config->width == 0)
+			map_config->width = j;
+		else if (map_config->width != j)
+			error_n_exit("Map should be rectangular"); //todo совместить ошибку незакрытой картой
 		j = 0;
 		i++;
 	}
-	if (count_P > 1 || count_E > 1)
-		error_n_exit("To much exit or player");
+	if (map_config->count_C < 1 || map_config->count_E < 1
+		|| map_config->count_P < 1)
+		error_n_exit("Some of 'C' or 'E' or 'P' is missing");
 }
 
-void	**map_parsing(int argc, char **argv, t_map *map_config)
+void	*map_parsing(int argc, char **argv, t_map *map_config)
 {
+	int		i;
 	int		fd;
 	char	*buf;
-	int		i;
-	int		line_num;
 
+	i = 0;
 	argv_valid(argc, argv);
-	i = 1;
-	line_num = 0;
-	map_config->map = ft_calloc(count_map_lines(argv[1]), sizeof(char **));
+	null_to_map_config(map_config);
+	map_config->height = count_map_lines(argv[1]);
+	map_config->map = ft_calloc(map_config->height, sizeof(char **));
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
-		error_n_exit("Can't read a buf");
-	while (i > 0)
+		error_n_exit("Can't read a map");
+	while (get_next_line(fd, &buf))
 	{
-		i = get_next_line(fd, &buf);
-		if (i > 0)
-		{
-			map_config->map[line_num] = ft_strdup(buf);
-			line_num += i;
-		}
+		map_config->map[i++] = ft_strdup(buf);
 		free(buf);
 	}
 	map_valid(map_config);
+	return (NULL);
 }
