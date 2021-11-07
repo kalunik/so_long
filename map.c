@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 20:54:10 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/05 11:53:48 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/07 14:58:18 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,11 @@ int	map_chars_scan(int i, int j, t_map *map_config)
 	if (map[i][j] != '0' && map[i][j] != '1' && map[i][j] != 'C' &&
 		map[i][j] != 'E' && map[i][j] != 'P')
 		return (-1);
-	if (map_config->map[i][j] == 'C')
+	if (map[i][j] == 'C')
 		map_config->count_C++;
-	if (map_config->map[i][j] == 'E')
+	if (map[i][j] == 'E')
 		map_config->count_E++;
-	if (map_config->map[i][j] == 'P')
+	if (map[i][j] == 'P')
 		map_config->count_P++;
 	if ((i == 0 || i == map_config->height) && map[i][j] != '1')
 		error_n_exit("Map's top or bottom doesn't surrounded by the walls");

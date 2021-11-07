@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/04 14:19:33 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/06 14:55:32 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "../libft/libft.h"
 # include "mlx.h"
 
+# define SPRITE_SIZE 48
 typedef struct s_map{
 	char	**map;
 	int		count_C;
@@ -31,8 +32,28 @@ typedef struct s_map{
 	int		width;
 }				t_map;
 
+typedef struct s_xpm_image_path {
+	char	*big_build_1;
+	char	*big_build_2;
+	char	*big_build_3;
+	char	*build_1;
+	char	*build_1_alt;
+	char	*collectible;
+	char	*exit;
+	char	*many_build;
+	char	*many_build_alt;
+	char	*player;
+	char	*thief;
+}				t_image;
+
+typedef struct s_mlx_pointers {
+	void	*mlx;
+	void	*mlx_win;
+}				t_mlx;
+
 void	error_n_exit(char *err_msg);
 void	*map_parsing(int argc, char **argv, t_map *map_config);
 void	print_map(char **map);
+void	assign_image_path(t_image *xpm);
 
 #endif
