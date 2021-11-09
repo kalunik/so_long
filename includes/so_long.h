@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/06 14:55:32 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/09 11:21:22 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include "../libft/libft.h"
 # include "mlx.h"
 
-# define SPRITE_SIZE 48
+# define SPRITE_SIZE 100
 typedef struct s_map{
 	char	**map;
 	int		count_C;

@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 01:20:28 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/07 16:28:18 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/09 11:30:48 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,8 @@ static inline void	main_layer_assist(t_mlx *mlx, t_image xpm, t_map
 		print_xpm_image(mlx, xpm.player, ij[0], ij[1]);
 	else if (map_config.map[ij[0]][ij[1]] == 'C')
 		print_xpm_image(mlx, xpm.collectible, ij[0], ij[1]);
-	else if (map_config.map[ij[0]][ij[1]] == 'E')
+	else if (map_config.map[ij[0]][ij[1]] == 'E' || map_config
+	.map[ij[0]][ij[1]] == '0')
 		print_xpm_image(mlx, xpm.exit, ij[0], ij[1]);
 	else if (ij[0] == (map_config.height - 1) && (ij[1] == 0 || ij[1]
 			== map_config.width))
@@ -127,6 +128,14 @@ void	main_layer(t_mlx *mlx, t_map map_config)
 	}
 }
 
+int	*find_P_on_the_map(t_mlx *mlx);
+
+int	key_hook(int keycode, t_mlx *mlx)
+{
+
+	printf("FD\n");
+}
+
 int	main(int argc, char **argv)
 {
 	t_map	map_config;
@@ -137,11 +146,52 @@ int	main(int argc, char **argv)
 	print_map(map_config.map);
 	mlx.mlx = NULL;
 	mlx.mlx = mlx_init();
-	mlx.mlx_win = mlx_new_window(mlx.mlx, 13 * SPRITE_SIZE, (5 * SPRITE_SIZE)
-			+ 4, "SO LONG");
+	mlx.mlx_win = mlx_new_window(mlx.mlx, 13 * SPRITE_SIZE, (5 * SPRITE_SIZE), "SO LONG");
 	main_layer(&mlx, map_config);
 	//mlx_string_put(mlx.mlx, mlx.mlx_win, 12, 48, 0xFFFFFF, "HFJ" );
+	//mlx_key_hook(mlx.mlx_win, key_hook, &mlx);
 	mlx_loop(mlx.mlx);
 	leak_case(map_config.height, map_config.map); //todo нужно помнить кол-во строк
 	return (0);
 }
+
+/*typedef struct	s_vars {
+	void	*mlx;
+	void	*win;
+}				t_vars;
+
+int	key_hook(int keycode, t_vars *vars)
+{
+	printf("Hello from key_hook!\n");
+}
+
+int	main(void)
+{
+	t_vars	vars;
+
+	vars.mlx = mlx_init();
+	vars.win = mlx_new_window(vars.mlx, 640, 480, "Hello world!");
+	mlx_key_hook(vars.win, key_hook, &vars);
+	mlx_loop(vars.mlx);
+}*/
+/*
+typedef struct	s_vars {
+	void	*mlx;
+	void	*win;
+}				t_vars;
+
+int	closing(int keycode, t_vars *vars)
+{
+	//mlx_destroy_window(vars->mlx, vars->win);
+	exit(0);
+}
+
+int	main(void)
+{
+	t_vars	vars;
+
+	vars.mlx = mlx_init();
+	vars.win = mlx_new_window(vars.mlx, 1920, 1080, "Hello world!");
+	mlx_hook(vars.win, 2, 1L<<0, closing, &vars);
+	mlx_loop(vars.mlx);
+}*/
