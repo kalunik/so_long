@@ -25,7 +25,7 @@ public class MlxImg
 	 texture_width = width
     	 texture_height = height
     	 texture_sizeline = width * 4
-    	 texture_sizeline = 256 * (texture_sizeline / 256 + (texture_sizeline%256 >= 1 ? 1 : 0) )
+    	 texture_sizeline = 256 * (texture_sizeline / 256 + (texture_sizeline % 256 >= 1 ? 1 : 0) )
 
          let textureDesc = MTLTextureDescriptor()
     	 textureDesc.width = texture_width

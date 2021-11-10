@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 01:20:28 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/09 11:30:48 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/10 20:03:34 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,7 @@ static inline void	main_layer_assist(t_mlx *mlx, t_image xpm, t_map
 		print_xpm_image(mlx, xpm.player, ij[0], ij[1]);
 	else if (map_config.map[ij[0]][ij[1]] == 'C')
 		print_xpm_image(mlx, xpm.collectible, ij[0], ij[1]);
-	else if (map_config.map[ij[0]][ij[1]] == 'E' || map_config
-	.map[ij[0]][ij[1]] == '0')
+	else if (map_config.map[ij[0]][ij[1]] == 'E')
 		print_xpm_image(mlx, xpm.exit, ij[0], ij[1]);
 	else if (ij[0] == (map_config.height - 1) && (ij[1] == 0 || ij[1]
 			== map_config.width))
@@ -130,10 +129,34 @@ void	main_layer(t_mlx *mlx, t_map map_config)
 
 int	*find_P_on_the_map(t_mlx *mlx);
 
-int	key_hook(int keycode, t_mlx *mlx)
+int	red_cross(int keycode, t_mlx *mlx)
 {
+	exit(EXIT_SUCCESS);
+}
 
-	printf("FD\n");
+void	actions(int keycode, t_mlx *mlx)
+{
+	if (keycode == KEY_ESC)
+		exit(0);
+	else if (keycode == KEY_W)
+		printf("W\n");
+	else if (keycode == KEY_A)
+		printf("A\n");
+	else if (keycode == KEY_S)
+		printf("S\n");
+	else if (keycode == KEY_D)
+		printf("D\n");
+}
+
+int	tap_key(int keycode, t_mlx *mlx)
+{
+	static int	i;
+	static int	j;
+
+	actions(keycode, mlx);
+	printf("%d\n", keycode);
+	mlx_pixel_put(mlx->mlx, mlx->mlx_win, i++, j++, 0xFFFFFF);
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -149,7 +172,8 @@ int	main(int argc, char **argv)
 	mlx.mlx_win = mlx_new_window(mlx.mlx, 13 * SPRITE_SIZE, (5 * SPRITE_SIZE), "SO LONG");
 	main_layer(&mlx, map_config);
 	//mlx_string_put(mlx.mlx, mlx.mlx_win, 12, 48, 0xFFFFFF, "HFJ" );
-	//mlx_key_hook(mlx.mlx_win, key_hook, &mlx);
+	mlx_key_hook(mlx.mlx_win, tap_key, &mlx);
+	mlx_hook(mlx.mlx_win, 17, 0L, red_cross, &mlx);
 	mlx_loop(mlx.mlx);
 	leak_case(map_config.height, map_config.map); //todo нужно помнить кол-во строк
 	return (0);

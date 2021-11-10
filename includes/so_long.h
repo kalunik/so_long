@@ -22,7 +22,13 @@
 # include "../libft/libft.h"
 # include "mlx.h"
 
-# define SPRITE_SIZE 100
+# define SPRITE_SIZE 48
+# define KEY_W 13
+# define KEY_A 0
+# define KEY_S 1
+# define KEY_D 2
+# define KEY_ESC 53
+
 typedef struct s_map{
 	char	**map;
 	int		count_C;
