@@ -1,6 +1,6 @@
 CC	=	gcc
 RM	=	rm -f
-CFLAGS	=	-I./includes -Imlx #-Wall -Wextra -Werror
+CFLAGS	=	-I./includes -Imlx -ggdb3 #-Wall -Wextra -Werror
 NAME	=	so_long
 LIBFT	=	./libft
 SRCS	=	so_long.c map.c \
@@ -16,7 +16,7 @@ all:
 
 $(NAME):	$(OBJS) $(LIBFT)/libft.a libft/libft.h
 #			$(MLX_LIB)
-			@$(CC) -Lmlx -lmlx -framework AppKit -o $(NAME) $(OBJS) $(LIBFT)/libft.a
+			@$(CC) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME) $(OBJS) $(LIBFT)/libft.a
 			@echo "so_long is ready to use ✅ "
 
 %.o: %.c	includes/so_long.h get_next_line/get_next_line.h

@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/09 11:21:22 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/12 21:20:51 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,6 @@
 # define KEY_D 2
 # define KEY_ESC 53
 
-typedef struct s_map{
-	char	**map;
-	int		count_C;
-	int		count_E;
-	int		count_P;
-	int		height;
-	int		width;
-}				t_map;
-
 typedef struct s_xpm_image_path {
 	char	*big_build_1;
 	char	*big_build_2;
@@ -52,14 +43,27 @@ typedef struct s_xpm_image_path {
 	char	*thief;
 }				t_image;
 
+typedef struct s_map{
+	char	**map;
+	int		count_c;
+	int		count_e;
+	int		count_p;
+	int		height;
+	int		width;
+	int		player_x;
+	int		player_y;
+}				t_map;
+
 typedef struct s_mlx_pointers {
 	void	*mlx;
 	void	*mlx_win;
+	t_map	game;
+	t_image	img;
 }				t_mlx;
 
 void	error_n_exit(char *err_msg);
-void	*map_parsing(int argc, char **argv, t_map *map_config);
-void	print_map(char **map);
+void	*map_parsing(int argc, char **argv, t_mlx *mlx);
+void	print_map(t_mlx mlx);
 void	assign_image_path(t_image *xpm);
 
 #endif
