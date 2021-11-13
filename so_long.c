@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 01:20:28 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/12 21:33:49 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/13 03:42:56 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	assign_image_path(t_image *xpm)
 	xpm->big_build_1 = "sprites/big_building_1.xpm";
 	xpm->big_build_2 = "sprites/big_building_2.xpm";
 	xpm->big_build_3 = "sprites/big_building_3.xpm";
+	xpm->blank = "sprites/blank.xpm";
 	xpm->build_1 = "sprites/building_1.xpm";
 	xpm->build_1_alt = "sprites/building_1_alt.xpm";
 	xpm->collectible = "sprites/collectible.xpm";
@@ -55,6 +56,7 @@ void	print_xpm_image(t_mlx *mlx, char *img_path, int i, int j)
 	void	*img;
 
 	img = mlx_xpm_file_to_image(mlx->mlx, img_path, &img_w, &img_h);
+	//printf("w h %d %d\n", img_w, img_h);
 	mlx_put_image_to_window(mlx->mlx, mlx->mlx_win, img, j * img_w, i * img_h);
 }
 
@@ -121,38 +123,95 @@ char	char_ahead(int key, t_mlx *mlx)
 	return (EXIT_FAILURE);
 }
 
+void	move_player(int key, t_mlx *mlx)
+{
+	int		*x;
+	int		*y;
+	char	next_step;
+
+	x = &mlx->game.player_x;
+	y = &mlx->game.player_y;
+	next_step = char_ahead(key, mlx);
+	if (next_step == '0' || next_step == 'P')
+	{
+		print_xpm_image(mlx, mlx->img.blank, *y, *x);
+		if (key == KEY_W)
+			(*y)--;
+		else if (key == KEY_A)
+			(*x)--;
+		else if (key == KEY_S)
+			(*y)++;
+		else if (key == KEY_D)
+			(*x)++;
+		print_xpm_image(mlx, mlx->img.player, *y, *x);
+		mlx->game.steps++;
+	}
+	else if (next_step == 'C')
+	{
+		mlx->game.count_c--;
+		print_xpm_image(mlx, mlx->img.blank, *y, *x);
+		if (key == KEY_W)
+			(*y)--;
+		else if (key == KEY_A)
+			(*x)--;
+		else if (key == KEY_S)
+			(*y)++;
+		else if (key == KEY_D)
+			(*x)++;
+		mlx->game.map[*y][*x] = '0';
+		print_xpm_image(mlx, mlx->img.player, *y, *x);
+		mlx->game.steps++;
+	}
+	else if (next_step == 'E' && mlx->game.count_c == 0)
+	{
+		mlx->game.count_c--;
+		print_xpm_image(mlx, mlx->img.blank, *y, *x);
+		if (key == KEY_W)
+			(*y)--;
+		else if (key == KEY_A)
+			(*x)--;
+		else if (key == KEY_S)
+			(*y)++;
+		else if (key == KEY_D)
+			(*x)++;
+		print_xpm_image(mlx, mlx->img.player, *y, *x);
+		mlx->game.steps++;
+		mlx->game.end = 1;
+	}
+}
+
 int	red_cross(int keycode, t_mlx *mlx)
 {
 	exit(EXIT_SUCCESS);
 }
 
-void	actions(int keycode, t_mlx *mlx)
+int	actions(int keycode, t_mlx *mlx)
 {
 	char	next_step;
 
 	next_step = 0;
 	if (keycode == KEY_ESC)
 		exit(0);
+	else if (mlx->game.end != 0)
+		return (EXIT_SUCCESS);
 	else if (keycode == KEY_W)
 	{
-		next_step = char_ahead(KEY_W, mlx);
-		if (next_step == '0')
-		{
-			mlx->game.player_y--;
-			print_xpm_image(mlx, "sprites/player.xpm", mlx->game.player_y * SPRITE_SIZE,
-				mlx->game.player_x * SPRITE_SIZE);
-			print_xpm_image(mlx, "sprites/thief.xpm", mlx->game.player_y *
-			SPRITE_SIZE,
-				mlx->game.player_x * SPRITE_SIZE);
-		}
+		move_player(KEY_W, mlx);
 	}
 	else if (keycode == KEY_A)
-		next_step = char_ahead(KEY_A, mlx);
+	{
+		move_player(KEY_A, mlx);
+	}
 	else if (keycode == KEY_S)
-		next_step = char_ahead(KEY_S, mlx);
+	{
+		move_player(KEY_S, mlx);
+	}
 	else if (keycode == KEY_D)
-		next_step = char_ahead(KEY_D, mlx);
+	{
+		move_player(KEY_D, mlx);
+	}
 	printf("%c --\n", next_step);
+	return (EXIT_FAILURE);
 }
 
 int	tap_key(int keycode, t_mlx *mlx)
@@ -161,8 +220,6 @@ int	tap_key(int keycode, t_mlx *mlx)
 	static int	j;
 
 	actions(keycode, mlx);
-	printf("%d\n", keycode); //todo delete
-	mlx_pixel_put(mlx->mlx, mlx->mlx_win, i++, j++, 0xFFFFFF);
 	return (0);
 }
 
@@ -179,6 +236,7 @@ void	main_layer(t_mlx *mlx)
 	j = 0;
 	map = mlx->game.map;
 	assign_image_path(&xpm);
+	mlx->img = xpm;
 	//map_size(map_config);
 	while (map[i])
 	{
@@ -204,9 +262,11 @@ int	main(int argc, char **argv)
 	print_map(mlx);
 	mlx.mlx = NULL;
 	mlx.mlx = mlx_init();
-	mlx.mlx_win = mlx_new_window(mlx.mlx, 13 * SPRITE_SIZE, (5 * SPRITE_SIZE), "SO LONG");
+	mlx.mlx_win = mlx_new_window(mlx.mlx, 13 * SPRITE_SIZE, (5 * SPRITE_SIZE)
+	+20, "SO LONG");
 	main_layer(&mlx);
-	//mlx_string_put(mlx.mlx, mlx.mlx_win, 12, 48, 0xFFFFFF, "HFJ" );
+	//mlx_string_put(mlx.mlx, mlx.mlx_win, SPRITE_SIZE, 5 * SPRITE_SIZE+20,
+				   0xFFFFFF, "HZD");
 	mlx_key_hook(mlx.mlx_win, tap_key, &mlx);
 	mlx_hook(mlx.mlx_win, 17, 0L, red_cross, &mlx);
 	mlx_loop(mlx.mlx);

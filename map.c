@@ -62,6 +62,8 @@ void	null_to_map_config(t_mlx *mlx)
 	mlx->game.width = 0;
 	mlx->game.player_x = 0;
 	mlx->game.player_y = 0;
+	mlx->game.steps = 0;
+	mlx->game.end = 0;
 }
 
 void	print_map(t_mlx mlx)
