@@ -150,7 +150,7 @@ void	*map_parsing(int argc, char **argv, t_mlx *mlx)
 	argv_valid(argc, argv);
 	null_to_map_config(mlx);
 	mlx->game.height = count_map_lines(argv[1]);
-	mlx->game.map = ft_calloc(mlx->game.height, sizeof(char **));
+	mlx->game.map = ft_calloc(mlx->game.height + 1, sizeof(char **));
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 		error_n_exit("Can't read a map");

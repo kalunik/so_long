@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 01:20:28 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/13 03:42:56 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/13 17:04:28 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,7 @@ void	move_player(int key, t_mlx *mlx)
 			(*x)++;
 		print_xpm_image(mlx, mlx->img.player, *y, *x);
 		mlx->game.steps++;
+		printf("Steps : %d\n", mlx->game.steps);
 	}
 	else if (next_step == 'C')
 	{
@@ -161,6 +162,7 @@ void	move_player(int key, t_mlx *mlx)
 		mlx->game.map[*y][*x] = '0';
 		print_xpm_image(mlx, mlx->img.player, *y, *x);
 		mlx->game.steps++;
+		printf("Steps : %d\n", mlx->game.steps);
 	}
 	else if (next_step == 'E' && mlx->game.count_c == 0)
 	{
@@ -176,6 +178,7 @@ void	move_player(int key, t_mlx *mlx)
 			(*x)++;
 		print_xpm_image(mlx, mlx->img.player, *y, *x);
 		mlx->game.steps++;
+		printf("Steps : %d\n", mlx->game.steps);
 		mlx->game.end = 1;
 	}
 }
@@ -187,9 +190,6 @@ int	red_cross(int keycode, t_mlx *mlx)
 
 int	actions(int keycode, t_mlx *mlx)
 {
-	char	next_step;
-
-	next_step = 0;
 	if (keycode == KEY_ESC)
 		exit(0);
 	else if (mlx->game.end != 0)
@@ -210,15 +210,11 @@ int	actions(int keycode, t_mlx *mlx)
 	{
 		move_player(KEY_D, mlx);
 	}
-	printf("%c --\n", next_step);
 	return (EXIT_FAILURE);
 }
 
 int	tap_key(int keycode, t_mlx *mlx)
 {
-	static int	i;
-	static int	j;
-
 	actions(keycode, mlx);
 	return (0);
 }
@@ -254,7 +250,6 @@ void	main_layer(t_mlx *mlx)
 
 int	main(int argc, char **argv)
 {
-
 	t_mlx	mlx;
 
 	errno = 0;
@@ -263,12 +258,14 @@ int	main(int argc, char **argv)
 	mlx.mlx = NULL;
 	mlx.mlx = mlx_init();
 	mlx.mlx_win = mlx_new_window(mlx.mlx, 13 * SPRITE_SIZE, (5 * SPRITE_SIZE)
-	+20, "SO LONG");
+			+ 20, "SO LONG");
 	main_layer(&mlx);
-	//mlx_string_put(mlx.mlx, mlx.mlx_win, SPRITE_SIZE, 5 * SPRITE_SIZE+20,
-				   0xFFFFFF, "HZD");
 	mlx_key_hook(mlx.mlx_win, tap_key, &mlx);
 	mlx_hook(mlx.mlx_win, 17, 0L, red_cross, &mlx);
+	//printf("Steps: %d\n", mlx.game.steps);
+	print_xpm_image(&mlx, mlx.img.blank, 0, (4 * SPRITE_SIZE) + 15);
+	mlx_string_put(mlx.mlx, mlx.mlx_win, 0, (5 * SPRITE_SIZE) + 15,
+		0xFFFFFF, ft_itoa(mlx.game.steps));
 	mlx_loop(mlx.mlx);
 	if (errno != 0)
 		error_n_exit("Unclassified");
