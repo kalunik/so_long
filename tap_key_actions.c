@@ -56,13 +56,7 @@ static inline void	move_player(int key, t_mlx *mlx)
 	char	next_step;
 
 	next_step = char_ahead(key, mlx);
-	if (next_stepqq
-
-
-	qsort()
-
-
-	== '0' || next_step == 'P')
+	if (next_step == '0' || next_step == 'P')
 	{
 		move_player_assist(key, mlx);
 	}
