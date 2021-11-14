@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/13 02:20:52 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/14 05:28:17 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,16 @@
 # include "../libft/libft.h"
 # include "mlx.h"
 
-# define SPRITE_SIZE 48
+# define TILE_SIZE 48
+# define KEY_ESC 53
 # define KEY_W 13
 # define KEY_A 0
 # define KEY_S 1
 # define KEY_D 2
-# define KEY_ESC 53
+# define ARROW_UP 126
+# define ARROW_LEFT 123
+# define ARROW_DOWN 125
+# define ARROW_RIGHT 124
 
 typedef struct s_xpm_image_path {
 	char	*big_build_1;
@@ -63,6 +67,12 @@ typedef struct s_mlx_pointers {
 	t_map	game;
 	t_image	img;
 }				t_mlx;
+
+void	print_xpm_image(t_mlx *mlx, char *img_path, int i, int j);
+void	main_layer(t_mlx *mlx);
+
+int		red_cross(int keycode, t_mlx *mlx);
+int		tap_key(int keycode, t_mlx *mlx);
 
 void	error_n_exit(char *err_msg);
 void	*map_parsing(int argc, char **argv, t_mlx *mlx);

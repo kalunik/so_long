@@ -3,7 +3,7 @@ RM	=	rm -f
 CFLAGS	=	-I./includes -Imlx -ggdb3 #-Wall -Wextra -Werror
 NAME	=	so_long
 LIBFT	=	./libft
-SRCS	=	so_long.c map.c \
+SRCS	=	so_long.c map.c print_map_layer.c tap_key_actions.c\
 			get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 #MLX_DIR		=	mlx
 #MLX_LIB		=	libmlx.dylib
