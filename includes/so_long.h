@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/14 05:28:17 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/17 20:16:09 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_xpm_image_path {
 	char	*build_1;
 	char	*build_1_alt;
 	char	*collectible;
+	char	*collectible_rev;
 	char	*exit;
 	char	*many_build;
 	char	*many_build_alt;
@@ -68,7 +69,7 @@ typedef struct s_mlx_pointers {
 	t_image	img;
 }				t_mlx;
 
-void	print_xpm_image(t_mlx *mlx, char *img_path, int i, int j);
+void	print_xpm_image(t_mlx *mlx, char *img_path, int y, int x);
 void	main_layer(t_mlx *mlx);
 
 int		red_cross(int keycode, t_mlx *mlx);

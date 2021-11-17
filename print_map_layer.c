@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 05:08:03 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/14 05:14:18 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/17 23:16:47 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	assign_image_path(t_image *xpm)
 	xpm->build_1 = "sprites/building_1.xpm";
 	xpm->build_1_alt = "sprites/building_1_alt.xpm";
 	xpm->collectible = "sprites/collectible.xpm";
+	xpm->collectible_rev = "sprites/collectible_rev.xpm";
 	xpm->exit = "sprites/exit.xpm";
 	xpm->many_build = "sprites/many_buildings_1.xpm";
 	xpm->many_build_alt = "sprites/many_buildings_1_alt.xpm";
@@ -28,30 +29,30 @@ void	assign_image_path(t_image *xpm)
 	xpm->thief = "sprites/thief.xpm";
 }
 
-static inline void	one_of_the_buildings(t_mlx *mlx, t_image xpm,
-		t_map map_config, int ij[2])
+static inline void	one_of_the_buildings(t_mlx *mlx, t_image xpm, int ij[2])
 {
 	int	random;
 
-	random = (ij[0] + ij[1]) * ij[0] % 4;
+	random = (ij[0] + ij[1]) * (ij[1] + 2) % 4;
+	//printf("%d == (%d + %d) * %d %% 4\n", random, ij[0], ij[1], ij[0]);
 	if (random == 0)
 		print_xpm_image(mlx, xpm.many_build_alt, ij[0], ij[1]);
 	else if (random == 1)
 		print_xpm_image(mlx, xpm.build_1_alt, ij[0], ij[1]);
 	else if (random == 2)
 		print_xpm_image(mlx, xpm.many_build, ij[0], ij[1]);
-	else if (random == 3)
+	else
 		print_xpm_image(mlx, xpm.build_1, ij[0], ij[1]);
 }
 
-void	print_xpm_image(t_mlx *mlx, char *img_path, int i, int j)
+void	print_xpm_image(t_mlx *mlx, char *img_path, int y, int x)
 {
 	int		img_w;
 	int		img_h;
 	void	*img;
 
 	img = mlx_xpm_file_to_image(mlx->mlx, img_path, &img_w, &img_h);
-	mlx_put_image_to_window(mlx->mlx, mlx->mlx_win, img, j * img_w, i * img_h);
+	mlx_put_image_to_window(mlx->mlx, mlx->mlx_win, img, x * img_w, y * img_h);
 }
 
 static inline void	main_layer_assist(t_mlx *mlx, t_image xpm, int ij[2])
