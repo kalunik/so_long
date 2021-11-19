@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 19:56:11 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/19 21:21:11 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/20 00:52:53 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,28 @@ void	*map_parsing_bonus(int argc, char **argv, t_mlx *mlx)
 	return (NULL);
 }
 
+void	exit_coordinates(t_mlx *mlx, int *x, int *y)
+{
+	while (mlx->game.map[*y])
+	{
+		while (mlx->game.map[*y][*x])
+		{
+			if (mlx->game.map[*y][*x] == 'E')
+				break ;
+			(*x)++;
+		}
+		*x = 0;
+		(*y)++;
+	}
+}
+
 static inline void	move_player_bonus(int key, t_mlx *mlx)
 {
 	char	next_step;
 	int		y;
 	char	*str_step;
+	int	i;
+	int	j;
 
 	clear_ticker(mlx);
 	y = (mlx->game.height * TILE_SIZE) + 15;
@@ -136,6 +153,16 @@ static inline void	move_player_bonus(int key, t_mlx *mlx)
 		clear_ticker(mlx);
 		mlx_string_put(mlx->mlx, mlx->mlx_win, 5, y, 0xFFFFFF, "YOU WIN!");
 	}
+	if (mlx->game.count_c == 0)
+	{
+
+
+		i = 0;
+		j = 0;
+		exit_coordinates(mlx, &i, &j);
+		printf("%d -- %d\n", i, j);
+	}
+
 }
 
 int	tap_key_bonus(int keycode, t_mlx *mlx)
@@ -163,14 +190,35 @@ int	tap_key_bonus(int keycode, t_mlx *mlx)
 	return (EXIT_FAILURE);
 }
 
+void	thief_path(t_enemy *thief)
+{
+	thief->thief_2 = "sprites/xpm/thief_2.xpm";
+	thief->thief_3 = "sprites/xpm/thief_3.xpm";
+	thief->thief_4 = "sprites/xpm/thief_4.xpm";
+	thief->thief_5 = "sprites/xpm/thief_5.xpm";
+	thief->thief_6 = "sprites/xpm/thief_6.xpm";
+	thief->thief_7 = "sprites/xpm/thief_7.xpm";
+	thief->thief_8 = "sprites/xpm/thief_8.xpm";
+	thief->thief_9 = "sprites/xpm/thief_9.xpm";
+}
+
 int	animation(t_mlx *mlx)
 {
 	static int	i;
 
-	if (i < 100)
-		print_xpm_image(mlx, mlx->img.collectible_rev, 1, 11);
-	else if (i < 200)
-		print_xpm_image(mlx, mlx->img.collectible, 1, 11);
+	thief_path(&(mlx->thief));
+	if (i < 10)
+		print_xpm_image(mlx, mlx->img.thief, 1, 2);
+	else if (i < 20)
+		print_xpm_image(mlx, mlx->thief.thief_2, 1, 2);
+	else if (i < 30)
+		print_xpm_image(mlx, mlx->thief.thief_3, 1, 2);
+	else if (i < 40)
+		print_xpm_image(mlx, mlx->thief.thief_9, 1, 2);
+	else if (i < 50)
+		print_xpm_image(mlx, mlx->thief.thief_3, 1, 2);
+	else if (i < 60)
+		print_xpm_image(mlx, mlx->thief.thief_2, 1, 2);
 	else
 		i = 0;
 	i++;
@@ -192,7 +240,7 @@ int	main(int argc, char **argv)
 				   "Find keys and go to exit to WIN");
 	mlx_key_hook(mlx.mlx_win, tap_key_bonus, &mlx);
 	mlx_hook(mlx.mlx_win, 17, 0L, red_cross, &mlx);
-	//mlx_loop_hook(mlx.mlx, animation, &mlx);
+	mlx_loop_hook(mlx.mlx, animation, &mlx);
 	mlx_loop(mlx.mlx);
 	if (errno != 0)
 		error_n_exit("Unclassified");

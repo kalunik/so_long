@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/19 21:24:41 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/20 00:38:03 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,17 @@
 # define ARROW_LEFT 123
 # define ARROW_DOWN 125
 # define ARROW_RIGHT 124
+
+typedef struct s_xpm_img_enemy_path {
+	char	*thief_2;
+	char	*thief_3;
+	char	*thief_4;
+	char	*thief_5;
+	char	*thief_6;
+	char	*thief_7;
+	char	*thief_8;
+	char	*thief_9;
+}				t_enemy;
 
 typedef struct s_xpm_image_path {
 	char	*big_build_1;
@@ -67,6 +78,7 @@ typedef struct s_mlx_pointers {
 	void	*mlx_win;
 	t_map	game;
 	t_image	img;
+	t_enemy	thief;
 }				t_mlx;
 
 ///map
