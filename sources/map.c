@@ -6,34 +6,11 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 20:54:10 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/12 21:17:12 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/19 21:21:11 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/so_long.h"
-
-void	error_n_exit(char *err_msg)
-{
-	printf("Error\n");
-	if (errno != 0)
-		perror(err_msg);
-	else
-		printf("%s\n", err_msg);
-	exit(EXIT_FAILURE);
-}
-
-void	argv_valid(int argc, char **argv)
-{
-	size_t	len;
-
-	if (argc != 2)
-	{
-		error_n_exit("You should give one argument");
-	}
-	len = ft_strlen(argv[1]);
-	if (ft_strncmp(argv[1] + (len - 4), ".ber", 4) != 0)
-		error_n_exit("Map for game should have .ber extension");
-}
+#include "so_long.h"
 
 int	count_map_lines(char *path_to_map)
 {
@@ -50,35 +27,12 @@ int	count_map_lines(char *path_to_map)
 		lines_count++;
 		free(buf);
 	}
+	free(buf);
+	close(fd);
 	return (lines_count);
 }
-void	null_to_map_config(t_mlx *mlx)
-{
-	mlx->game.map = NULL;
-	mlx->game.count_c = 0;
-	mlx->game.count_e = 0;
-	mlx->game.count_p = 0;
-	mlx->game.height = 0;
-	mlx->game.width = 0;
-	mlx->game.player_x = 0;
-	mlx->game.player_y = 0;
-	mlx->game.steps = 0;
-	mlx->game.end = 0;
-}
 
-void	print_map(t_mlx mlx)
-{
-	int	i;
-
-	i = 0;
-	while (mlx.game.map[i])
-	{
-		printf("%s\n", mlx.game.map[i]);
-		i++;
-	}
-}
-
-int	map_chars_scan(int i, int j, t_mlx *mlx)
+static inline int	map_chars_scan(int i, int j, t_mlx *mlx)
 {
 	char	**map;
 
@@ -103,7 +57,7 @@ int	map_chars_scan(int i, int j, t_mlx *mlx)
 	return (0);
 }
 
-void	map_valid(t_mlx *mlx)
+static inline void	map_valid(t_mlx *mlx)
 {
 	int		i;
 	int		j;
@@ -118,11 +72,6 @@ void	map_valid(t_mlx *mlx)
 				error_n_exit("Invalid markup symbols on the map");
 			j++;
 		}
-/*		j--;
-		if (mlx->game.width == 0)
-			mlx->game.width = j;
-		else if (mlx->game.width != j)
-			error_n_exit("Map should be rectangular"); //todo совместить ошибку незакрытой картой*/
 		j = 0;
 		i++;
 	}
@@ -134,17 +83,16 @@ void	map_valid(t_mlx *mlx)
 void	check_map_rectangle(int i, t_mlx *mlx)
 {
 	if (i == 0)
-		mlx->game.width = ft_strlen(mlx->game.map[i++]);
-	else if (ft_strlen(mlx->game.map[i++]) != mlx->game.width)
+		mlx->game.width = (int)ft_strlen(mlx->game.map[i++]);
+	else if ((int)ft_strlen(mlx->game.map[i++]) != mlx->game.width)
 		error_n_exit("Map should be rectangular");
 }
 
-void	*map_parsing(int argc, char **argv, t_mlx *mlx)
+void	map_parsing(int argc, char **argv, t_mlx *mlx)
 {
 	int		i;
 	int		fd;
 	char	*buf;
-	int		len;
 
 	i = 0;
 	argv_valid(argc, argv);
@@ -161,7 +109,7 @@ void	*map_parsing(int argc, char **argv, t_mlx *mlx)
 		free(buf);
 		i++;
 	}
-	//print_map(mlx->game.map);
+	free(buf);
+	close(fd);
 	map_valid(mlx);
-	return (NULL);
 }

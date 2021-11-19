@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/17 20:16:09 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/19 21:24:41 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <stdlib.h>
 # include "../get_next_line/get_next_line.h"
 # include "../libft/libft.h"
-# include "mlx.h"
+# include "../mlx/mlx.h"
 
 # define TILE_SIZE 48
 # define KEY_ESC 53
@@ -69,15 +69,25 @@ typedef struct s_mlx_pointers {
 	t_image	img;
 }				t_mlx;
 
-void	print_xpm_image(t_mlx *mlx, char *img_path, int y, int x);
+///map
+int		count_map_lines(char *path_to_map);
+void	check_map_rectangle(int i, t_mlx *mlx);
+void	map_parsing(int argc, char **argv, t_mlx *mlx);
+
+///print_map_layer
 void	main_layer(t_mlx *mlx);
 
-int		red_cross(int keycode, t_mlx *mlx);
+///tap_key_actions
+char	char_ahead(int key, t_mlx *mlx);
+void	move_player_assist(int key, t_mlx *mlx);
+int		red_cross(void);
 int		tap_key(int keycode, t_mlx *mlx);
 
+///utils
 void	error_n_exit(char *err_msg);
-void	*map_parsing(int argc, char **argv, t_mlx *mlx);
-void	print_map(t_mlx mlx);
+void	argv_valid(int argc, char **argv);
+void	null_to_map_config(t_mlx *mlx);
 void	assign_image_path(t_image *xpm);
+void	print_xpm_image(t_mlx *mlx, char *img_path, int y, int x);
 
 #endif

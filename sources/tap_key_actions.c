@@ -6,13 +6,13 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 05:18:43 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/14 05:46:09 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/19 21:21:11 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/so_long.h"
+#include "so_long.h"
 
-static inline char	char_ahead(int key, t_mlx *mlx)
+char	char_ahead(int key, t_mlx *mlx)
 {
 	int	x;
 	int	y;
@@ -30,7 +30,7 @@ static inline char	char_ahead(int key, t_mlx *mlx)
 	return (EXIT_FAILURE);
 }
 
-static inline void	move_player_assist(int key, t_mlx *mlx)
+void	move_player_assist(int key, t_mlx *mlx)
 {
 	int		*x;
 	int		*y;
@@ -62,21 +62,18 @@ static inline void	move_player(int key, t_mlx *mlx)
 	}
 	else if (next_step == 'C')
 	{
+		move_player_assist(key, mlx);
 		mlx->game.count_c--;
 		mlx->game.map[mlx->game.player_y][mlx->game.player_x] = '0';
-		move_player_assist(key, mlx);
 	}
-	else if (next_step == 'E' && mlx->game.count_c == 0)
+	else if (next_step == 'E' && mlx->game.count_c <= 0)
 	{
-		mlx->game.count_c--;
-		mlx->game.end = 1;
 		move_player_assist(key, mlx);
+		mlx->game.end = 1;
 	}
-/*	print_xpm_image(mlx, mlx->img.blank, 5, 0);
-	mlx_string_put(mlx->mlx, mlx->mlx_win, 5, (5 * TILE_SIZE) + 15,0xFFFFFF, ft_itoa(mlx->game.steps));*/
 }
 
-int	red_cross(int keycode, t_mlx *mlx)
+int	red_cross(void)
 {
 	exit(EXIT_SUCCESS);
 }
