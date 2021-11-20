@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 19:56:11 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/20 00:52:53 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/20 21:23:43 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,99 @@ void	clear_ticker(t_mlx *mlx)
 	}
 }
 
+t_location	*create_first_node(int x, int y)
+{
+	t_location	*node;
+
+	node = malloc(sizeof(t_location));
+	if (node == NULL)
+		exit(0);
+	node->x = x;
+	node->y = y;
+	node->next = NULL;
+	return (node);
+}
+
+t_location	*add_node_start(int x, int y, t_location **head)
+{
+	t_location	*node;
+
+	node = malloc(sizeof(t_location));
+	if (node == NULL)
+		exit(0);
+	node->x = x;
+	node->y = y;
+	node->next = *head;
+	return (node);
+}
+
+void	add_node_end(int x, int y, t_location *head)
+{
+	t_location	*node;
+	t_location	*tmp;
+
+	node = malloc(sizeof(t_location));
+	if (node == NULL)
+		exit(0);
+	node->x = x;
+	node->y = y;
+	node->next = NULL;
+	tmp = head;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = node;
+}
+
+/*
+t_location	*create_list(int x, int y)
+{
+	int			i;
+	t_location	*node;
+
+	i = 1;
+	if (argc < 2)
+	{
+		node = NULL;
+	}
+	else
+	{
+		stack = create_first_node();
+		while (i < argc)
+		{
+			add_node_end(ft_atoi(argv[i++]), stack);
+		}
+	}
+	return (stack);
+}
+*/
+
+void	print_list(t_location *head)
+{
+	t_location	*tmp;
+
+	tmp = head;
+	while (tmp)
+	{
+		ft_putnbr_fd(tmp->x, 1);
+		ft_putnbr_fd(tmp->y, 1);
+		ft_putchar_fd('|', 1);
+		tmp = tmp->next;
+	}
+	ft_putchar_fd('\n', 1);
+}
+
 static inline int	map_chars_scan_bonus(int i, int j, t_mlx *mlx)
 {
-	char	**map;
+	char		**map;
+/*	mlx->game.thief = malloc(sizeof(t_location));
+	mlx->game.thief->x = 3;*/
+	//t_location	*thief;
 
+	//*thief = mlx->game.thief;
+	//thief = NULL;
+	/*mlx->game.thief.x = 3;
+	mlx->game.thief.next = NULL;*/
+	//printf("%d\n", mlx->game.thief.x);
 	map = mlx->game.map;
 	if (map[i][j] != '0' && map[i][j] != '1' && map[i][j] != 'C' &&
 		map[i][j] != 'E' && map[i][j] != 'P' && map[i][j] != 'T')
@@ -42,6 +131,27 @@ static inline int	map_chars_scan_bonus(int i, int j, t_mlx *mlx)
 		mlx->game.player_y = i;
 		mlx->game.count_p++;
 	}
+/*
+	if (map[i][j] == 'T')
+	{
+		if (mlx->game.count_t == 0)
+		{
+			thief = create_first_node(j, i);
+			printf("|");
+		}
+		else
+		{
+			add_node_start(j, i, &thief);
+			printf("+");
+		}
+		//add_node_end(j, i, thief);
+		if (mlx->game.count_t == 1)
+			printf("%d -- \n", thief->next->x);
+		mlx->game.count_t++;
+		mlx->game.thief = *thief;
+		//print_list(thief);
+	}
+*/
 	if ((i == 0 || i == mlx->game.height) && map[i][j] != '1')
 		error_n_exit("Map's top or bottom doesn't surrounded by the walls");
 	if (i != 0 && (map[i][0] != '1' || map[i][mlx->game.width - 1] != '1'))
@@ -72,15 +182,13 @@ static inline void	map_valid_bonus(t_mlx *mlx)
 		error_n_exit("Some of 'C' or 'E' or 'P' is missing");
 }
 
-void	*map_parsing_bonus(int argc, char **argv, t_mlx *mlx)
+void	map_parsing_assist(int argc, char **argv, t_mlx *mlx)
 {
 	int		i;
 	int		fd;
 	char	*buf;
 
 	i = 0;
-	argv_valid(argc, argv);
-	null_to_map_config(mlx);
 	mlx->game.height = count_map_lines(argv[1]);
 	mlx->game.map = ft_calloc(mlx->game.height + 1, sizeof(char **));
 	fd = open(argv[1], O_RDONLY);
@@ -95,22 +203,69 @@ void	*map_parsing_bonus(int argc, char **argv, t_mlx *mlx)
 	}
 	free(buf);
 	close(fd);
+}
+
+void	find_enemy(t_location	**enemy, t_mlx *mlx)
+{
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 0;
+	while (mlx->game.map[y])
+	{
+		while (mlx->game.map[y][x])
+		{
+			if (mlx->game.map[y][x] == 'T')
+			{
+				if (mlx->game.count_t == 0)
+					*enemy = create_first_node(x, y);
+				else
+					add_node_end(x, y, *enemy);
+				mlx->game.count_t++;
+			}
+			x++;
+		}
+		x = 0;
+		y++;
+	}
+}
+
+void	*map_parsing_bonus(int argc, char **argv, t_mlx *mlx)
+{
+	t_location	*enemy;
+
+	argv_valid(argc, argv);
+	null_to_map_config(mlx);
+	map_parsing_assist(argc, argv, mlx);
 	map_valid_bonus(mlx);
+	find_enemy(&enemy, mlx);
+	mlx->game.thief = enemy;
+	//print_list(mlx->game.thief);
 	return (NULL);
 }
 
-void	exit_coordinates(t_mlx *mlx, int *x, int *y)
+void	exit_coordinates(t_mlx *mlx, int *j, int *i)
 {
-	while (mlx->game.map[*y])
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 0;
+	while (mlx->game.map[y])
 	{
-		while (mlx->game.map[*y][*x])
+		while (mlx->game.map[y][x])
 		{
-			if (mlx->game.map[*y][*x] == 'E')
-				break ;
-			(*x)++;
+			if (mlx->game.map[y][x] == 'E')
+			{
+				*i = y;
+				*j = x;
+				return ;
+			}
+			x++;
 		}
-		*x = 0;
-		(*y)++;
+		x = 0;
+		y++;
 	}
 }
 
@@ -122,11 +277,7 @@ static inline void	move_player_bonus(int key, t_mlx *mlx)
 	int	i;
 	int	j;
 
-	clear_ticker(mlx);
 	y = (mlx->game.height * TILE_SIZE) + 15;
-	str_step = ft_itoa(mlx->game.steps);
-	mlx_string_put(mlx->mlx, mlx->mlx_win, 5, y, 0xFFFFFF, str_step);
-	free(str_step);
 	next_step = char_ahead(key, mlx);
 	if (next_step == '0' || next_step == 'P')
 	{
@@ -152,17 +303,21 @@ static inline void	move_player_bonus(int key, t_mlx *mlx)
 		mlx->game.end = 1;
 		clear_ticker(mlx);
 		mlx_string_put(mlx->mlx, mlx->mlx_win, 5, y, 0xFFFFFF, "YOU WIN!");
-	}
-	if (mlx->game.count_c == 0)
+	} //todo можно сделать открытие двери
+/*	if (mlx->game.count_c == 0)
 	{
-
-
 		i = 0;
 		j = 0;
 		exit_coordinates(mlx, &i, &j);
 		printf("%d -- %d\n", i, j);
+	}*/
+	if (mlx->game.end != 1)
+	{
+		clear_ticker(mlx);
+		str_step = ft_itoa(mlx->game.steps);
+		mlx_string_put(mlx->mlx, mlx->mlx_win, 5, y, 0xFFFFFF, str_step);
+		free(str_step);
 	}
-
 }
 
 int	tap_key_bonus(int keycode, t_mlx *mlx)
@@ -190,35 +345,59 @@ int	tap_key_bonus(int keycode, t_mlx *mlx)
 	return (EXIT_FAILURE);
 }
 
-void	thief_path(t_enemy *thief)
+void	thief_path(t_enemy *image)
 {
-	thief->thief_2 = "sprites/xpm/thief_2.xpm";
-	thief->thief_3 = "sprites/xpm/thief_3.xpm";
-	thief->thief_4 = "sprites/xpm/thief_4.xpm";
-	thief->thief_5 = "sprites/xpm/thief_5.xpm";
-	thief->thief_6 = "sprites/xpm/thief_6.xpm";
-	thief->thief_7 = "sprites/xpm/thief_7.xpm";
-	thief->thief_8 = "sprites/xpm/thief_8.xpm";
-	thief->thief_9 = "sprites/xpm/thief_9.xpm";
+	image->thief_2 = "sprites/xpm/thief_2.xpm";
+	image->thief_3 = "sprites/xpm/thief_3.xpm";
+	image->thief_4 = "sprites/xpm/thief_4.xpm";
+	image->thief_5 = "sprites/xpm/thief_5.xpm";
+	image->thief_6 = "sprites/xpm/thief_6.xpm";
+	image->thief_7 = "sprites/xpm/thief_7.xpm";
+	image->thief_8 = "sprites/xpm/thief_8.xpm";
+	image->thief_9 = "sprites/xpm/thief_9.xpm";
+}
+
+void	animation_assist(char *image_path, t_mlx *mlx)
+{
+	t_location	*thief;
+
+	thief = mlx->game.thief;
+	while (thief)
+	{
+		print_xpm_image(mlx, image_path, thief->y, thief->x);
+		thief = thief->next;
+	}
 }
 
 int	animation(t_mlx *mlx)
 {
 	static int	i;
 
-	thief_path(&(mlx->thief));
+	thief_path(&(mlx->image));
 	if (i < 10)
-		print_xpm_image(mlx, mlx->img.thief, 1, 2);
+	{
+		animation_assist(mlx->img.thief, mlx);
+	}
 	else if (i < 20)
-		print_xpm_image(mlx, mlx->thief.thief_2, 1, 2);
+	{
+		animation_assist(mlx->image.thief_2, mlx);
+	}
 	else if (i < 30)
-		print_xpm_image(mlx, mlx->thief.thief_3, 1, 2);
+	{
+		animation_assist(mlx->image.thief_3, mlx);
+	}
 	else if (i < 40)
-		print_xpm_image(mlx, mlx->thief.thief_9, 1, 2);
+	{
+		animation_assist(mlx->image.thief_9, mlx);
+	}
 	else if (i < 50)
-		print_xpm_image(mlx, mlx->thief.thief_3, 1, 2);
+	{
+		animation_assist(mlx->image.thief_3, mlx);
+	}
 	else if (i < 60)
-		print_xpm_image(mlx, mlx->thief.thief_2, 1, 2);
+	{
+		animation_assist(mlx->image.thief_2, mlx);
+	}
 	else
 		i = 0;
 	i++;
@@ -230,13 +409,12 @@ int	main(int argc, char **argv)
 	t_mlx	mlx;
 
 	errno = 0;
-	map_parsing_bonus(argc, argv, &mlx); //'T' добавлен, думаю характеристики не важны
+	map_parsing_bonus(argc, argv, &mlx);//'T' добавлен, думаю характеристики не важны
 	mlx.mlx = NULL;
 	mlx.mlx = mlx_init();
-	mlx.mlx_win = mlx_new_window(mlx.mlx, mlx.game.width * TILE_SIZE, (mlx.game
-				.height * TILE_SIZE) + 20, "SO LONG");
+	mlx.mlx_win = mlx_new_window(mlx.mlx, mlx.game.width * TILE_SIZE, (mlx.game.height * TILE_SIZE) + 20, "SO LONG");
 	main_layer(&mlx);
-	mlx_string_put(mlx.mlx, mlx.mlx_win, 5, (5 * TILE_SIZE) + 15, 0xFFFFFF,
+	mlx_string_put(mlx.mlx, mlx.mlx_win, 5, (mlx.game.height * TILE_SIZE) + 15, 0xFFFFFF,
 				   "Find keys and go to exit to WIN");
 	mlx_key_hook(mlx.mlx_win, tap_key_bonus, &mlx);
 	mlx_hook(mlx.mlx_win, 17, 0L, red_cross, &mlx);

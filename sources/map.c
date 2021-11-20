@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 20:54:10 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/19 21:21:11 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/20 21:36:11 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ void	map_parsing(int argc, char **argv, t_mlx *mlx)
 		free(buf);
 		i++;
 	}
+	//mlx->game.map[i] = ft_strdup(buf);
 	free(buf);
 	close(fd);
 	map_valid(mlx);

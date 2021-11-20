@@ -1,6 +1,6 @@
 CC	=	gcc
 RM	=	rm -f
-CFLAGS	=	-I./includes -Imlx -Wall -Wextra -Werror
+CFLAGS	=	-I./includes -Imlx# -Wall -Wextra -Werror
 NAME	=	so_long
 B_NAME	=	so_long_bonus
 LIBFT	=	./libft

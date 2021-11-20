@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 20:51:06 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/19 21:08:21 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/20 21:31:32 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,9 @@ void	error_n_exit(char *err_msg)
 
 void	argv_valid(int argc, char **argv)
 {
-	size_t	len;
-
 	if (argc != 2)
-	{
 		error_n_exit("You should give one argument");
-	}
-	len = ft_strlen(argv[1]);
-	if (ft_strncmp(argv[1] + (len - 4), ".ber", 4) != 0)
+	if (ft_strncmp(argv[1] + (ft_strlen(argv[1]) - 4), ".ber", 4) != 0)
 		error_n_exit("Map for game should have '.ber' extension");
 }
 
@@ -41,6 +36,7 @@ void	null_to_map_config(t_mlx *mlx)
 	mlx->game.count_c = 0;
 	mlx->game.count_e = 0;
 	mlx->game.count_p = 0;
+	mlx->game.count_t = 0;
 	mlx->game.height = 0;
 	mlx->game.width = 0;
 	mlx->game.player_x = 0;

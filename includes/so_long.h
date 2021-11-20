@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/20 00:38:03 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/20 19:36:48 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,25 @@ typedef struct s_xpm_image_path {
 	char	*thief;
 }				t_image;
 
+typedef struct s_node{
+	struct s_node	*next;
+	int				x;
+	int				y;
+}				t_location;
+
 typedef struct s_map{
-	char	**map;
-	int		count_c;
-	int		count_e;
-	int		count_p;
-	int		height;
-	int		width;
-	int		player_x;
-	int		player_y;
-	int		steps;
-	int		end;
+	char		**map;
+	int			count_c;
+	int			count_e;
+	int			count_p;
+	int			count_t;
+	int			height;
+	int			width;
+	int			player_x;
+	int			player_y;
+	int			steps;
+	int			end;
+	t_location	*thief;
 }				t_map;
 
 typedef struct s_mlx_pointers {
@@ -78,7 +86,7 @@ typedef struct s_mlx_pointers {
 	void	*mlx_win;
 	t_map	game;
 	t_image	img;
-	t_enemy	thief;
+	t_enemy	image;
 }				t_mlx;
 
 ///map

@@ -12,12 +12,25 @@
 
 #include "so_long.h"
 
+void	print_map(t_mlx mlx)
+{
+	int	i;
+
+	i = 0;
+	while (mlx.game.map[i])
+	{
+		printf("%s\n", mlx.game.map[i]);
+		i++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_mlx	mlx;
 
 	errno = 0;
 	map_parsing(argc, argv, &mlx);
+	print_map(mlx);
 	mlx.mlx = NULL;
 	mlx.mlx = mlx_init();
 	mlx.mlx_win = mlx_new_window(mlx.mlx, mlx.game.width * TILE_SIZE,
