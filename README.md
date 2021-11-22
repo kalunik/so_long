@@ -14,4 +14,4 @@ My project includes miniLibx for macOS.
 3. Run for example`./so_long_bonus maps/map_bonus.ber`.
 
 #### Example
-![100 operations algorithm](gif/solong.gif)
+![game sample](gif/solong.gif)
