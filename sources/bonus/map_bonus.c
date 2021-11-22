@@ -1,44 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.c                                              :+:      :+:    :+:   */
+/*   map_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/03 20:54:10 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/20 21:36:11 by wjonatho         ###   ########.fr       */
+/*   Created: 2021/11/22 02:23:47 by wjonatho          #+#    #+#             */
+/*   Updated: 2021/11/22 02:28:45 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../../includes/so_long_bonus.h"
 
-int	count_map_lines(char *path_to_map)
+static inline void	map_parsing_assist(int argc, char **argv, t_mlx *mlx)
 {
+	int		i;
 	int		fd;
-	int		lines_count;
 	char	*buf;
 
-	lines_count = 0;
-	fd = open(path_to_map, O_RDONLY);
+	i = 0;
+	mlx->game.height = count_map_lines(argv[1]);
+	mlx->game.map = ft_calloc(mlx->game.height + 1, sizeof(char **));
+	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
-		error_n_exit("Can't read a buf");
+		error_n_exit("Can't read a map");
 	while (get_next_line(fd, &buf))
 	{
-		lines_count++;
+		mlx->game.map[i] = ft_strdup(buf);
+		check_map_rectangle(i, mlx);
 		free(buf);
+		i++;
 	}
 	free(buf);
 	close(fd);
-	return (lines_count);
 }
 
-static inline int	map_chars_scan(int i, int j, t_mlx *mlx)
+static inline int	map_chars_scan_bonus(int i, int j, t_mlx *mlx)
 {
-	char	**map;
+	char		**map;
 
 	map = mlx->game.map;
 	if (map[i][j] != '0' && map[i][j] != '1' && map[i][j] != 'C' &&
-		map[i][j] != 'E' && map[i][j] != 'P')
+		map[i][j] != 'E' && map[i][j] != 'P' && map[i][j] != 'T')
 		return (-1);
 	if (map[i][j] == 'C')
 		mlx->game.count_c++;
@@ -61,7 +64,7 @@ static inline int	map_chars_scan(int i, int j, t_mlx *mlx)
 	return (0);
 }
 
-static inline void	map_valid(t_mlx *mlx)
+static inline void	map_valid_bonus(t_mlx *mlx)
 {
 	int		i;
 	int		j;
@@ -72,7 +75,7 @@ static inline void	map_valid(t_mlx *mlx)
 	{
 		while (j < mlx->game.width)
 		{
-			if (map_chars_scan(i, j, mlx))
+			if (map_chars_scan_bonus(i, j, mlx))
 				error_n_exit("Invalid markup symbols on the map");
 			j++;
 		}
@@ -84,36 +87,41 @@ static inline void	map_valid(t_mlx *mlx)
 		error_n_exit("Some of 'C' or 'E' or 'P' is missing");
 }
 
-void	check_map_rectangle(int i, t_mlx *mlx)
+static inline void	find_enemy(t_location	**enemy, t_mlx *mlx)
 {
-	if (i == 0)
-		mlx->game.width = (int)ft_strlen(mlx->game.map[i++]);
-	else if ((int)ft_strlen(mlx->game.map[i++]) != mlx->game.width)
-		error_n_exit("Map should be rectangular");
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 0;
+	while (mlx->game.map[y])
+	{
+		while (mlx->game.map[y][x])
+		{
+			if (mlx->game.map[y][x] == 'T')
+			{
+				if (mlx->game.count_t == 0)
+					*enemy = create_first_node(x, y);
+				else
+					add_node_end(x, y, *enemy);
+				mlx->game.count_t++;
+			}
+			x++;
+		}
+		x = 0;
+		y++;
+	}
 }
 
-void	map_parsing(int argc, char **argv, t_mlx *mlx)
+void	*map_parsing_bonus(int argc, char **argv, t_mlx *mlx)
 {
-	int		i;
-	int		fd;
-	char	*buf;
+	t_location	*enemy;
 
-	i = 0;
 	argv_valid(argc, argv);
 	null_to_map_config(mlx);
-	mlx->game.height = count_map_lines(argv[1]);
-	mlx->game.map = ft_calloc(mlx->game.height + 1, sizeof(char **));
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-		error_n_exit("Can't read a map");
-	while (get_next_line(fd, &buf))
-	{
-		mlx->game.map[i] = ft_strdup(buf);
-		check_map_rectangle(i, mlx);
-		free(buf);
-		i++;
-	}
-	free(buf);
-	close(fd);
-	map_valid(mlx);
+	map_parsing_assist(argc, argv, mlx);
+	map_valid_bonus(mlx);
+	find_enemy(&enemy, mlx);
+	mlx->game.thief = enemy;
+	return (NULL);
 }

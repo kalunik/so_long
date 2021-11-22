@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 14:05:19 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/20 19:36:48 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/22 01:37:27 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ typedef struct s_xpm_image_path {
 	char	*build_1;
 	char	*build_1_alt;
 	char	*collectible;
-	char	*collectible_rev;
 	char	*exit;
+	char	*E_2;
+	char	*E_3;
 	char	*many_build;
 	char	*many_build_alt;
 	char	*player;
@@ -76,6 +77,8 @@ typedef struct s_map{
 	int			width;
 	int			player_x;
 	int			player_y;
+	int			exit_x;
+	int			exit_y;
 	int			steps;
 	int			end;
 	t_location	*thief;

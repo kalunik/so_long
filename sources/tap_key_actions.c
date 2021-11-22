@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 05:18:43 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/19 21:21:11 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/22 01:50:57 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ void	move_player_assist(int key, t_mlx *mlx)
 		(*y)++;
 	else if (key == KEY_D)
 		(*x)++;
-	print_xpm_image(mlx, mlx->img.player, *y, *x);
+	if (mlx->game.end == 1)
+		print_xpm_image(mlx, mlx->img.E_3, *y, *x);
+	else
+		print_xpm_image(mlx, mlx->img.player, *y, *x);
 	mlx->game.steps++;
 	printf("Steps : %d\n", mlx->game.steps);
 }
@@ -56,6 +59,10 @@ static inline void	move_player(int key, t_mlx *mlx)
 	char	next_step;
 
 	next_step = char_ahead(key, mlx);
+	if (mlx->game.count_c == 0)
+	{
+		print_xpm_image(mlx, mlx->img.E_2, mlx->game.exit_y, mlx->game.exit_x);
+	}
 	if (next_step == '0' || next_step == 'P')
 	{
 		move_player_assist(key, mlx);
@@ -68,8 +75,8 @@ static inline void	move_player(int key, t_mlx *mlx)
 	}
 	else if (next_step == 'E' && mlx->game.count_c <= 0)
 	{
-		move_player_assist(key, mlx);
 		mlx->game.end = 1;
+		move_player_assist(key, mlx);
 	}
 }
 

@@ -6,7 +6,7 @@ B_NAME	=	so_long_bonus
 LIBFT	=	./libft
 SRCS	=	sources/so_long.c sources/map.c sources/print_map_layer.c sources/tap_key_actions.c sources/utils.c\
 			get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
-B_SRCS	=	sources/bonus/so_long_bonus.c sources/map.c sources/print_map_layer.c sources/tap_key_actions.c sources/utils.c\
+B_SRCS	=	sources/bonus/so_long_bonus.c sources/bonus/animation.c sources/bonus/map_bonus.c sources/bonus/tap_key_actions_bonus.c sources/bonus/utils_bonus.c sources/map.c sources/print_map_layer.c sources/tap_key_actions.c sources/utils.c\
 			get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 #MLX_DIR		=	mlx
 #MLX_LIB		=	libmlx.dylib

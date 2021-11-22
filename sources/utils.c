@@ -6,7 +6,7 @@
 /*   By: wjonatho <wjonatho@student.21-school.ru>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 20:51:06 by wjonatho          #+#    #+#             */
-/*   Updated: 2021/11/20 21:31:32 by wjonatho         ###   ########.fr       */
+/*   Updated: 2021/11/22 01:42:46 by wjonatho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	null_to_map_config(t_mlx *mlx)
 	mlx->game.width = 0;
 	mlx->game.player_x = 0;
 	mlx->game.player_y = 0;
+	mlx->game.exit_x = 0;
+	mlx->game.exit_y = 0;
 	mlx->game.steps = 0;
 	mlx->game.end = 0;
 }
@@ -54,8 +56,9 @@ void	assign_image_path(t_image *xpm)
 	xpm->build_1 = "sprites/building_1.xpm";
 	xpm->build_1_alt = "sprites/building_1_alt.xpm";
 	xpm->collectible = "sprites/collectible.xpm";
-	xpm->collectible_rev = "sprites/collectible_rev.xpm";
 	xpm->exit = "sprites/exit.xpm";
+	xpm->E_2 = "sprites/exit_2.xpm";
+	xpm->E_3 = "sprites/exit_3.xpm";
 	xpm->many_build = "sprites/many_buildings_1.xpm";
 	xpm->many_build_alt = "sprites/many_buildings_1_alt.xpm";
 	xpm->player = "sprites/player.xpm";
